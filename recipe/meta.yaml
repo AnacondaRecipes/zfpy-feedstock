@@ -40,7 +40,8 @@ requirements:
     - cmake
     - make     # [unix]
     - ninja    # [win]
-    - libgomp  # [linux]
+    # For defaults, this is included in libgcc-ng
+    # - libgomp  # [linux]
     - llvm-openmp  # [osx]
 
 test:
