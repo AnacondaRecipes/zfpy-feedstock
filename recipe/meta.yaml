@@ -24,7 +24,7 @@ source:
     # - 109-avoid-importing-cpython-array.patch
 
 build:
-  number: 4
+  number: 5
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
   run_exports:
@@ -60,6 +60,11 @@ test:
 
 outputs:
   - name: zfp
+    requirements:
+      run:
+        # Using selector until packages for other platforms are (re)built using
+        # newer defaults toolchains that use the `_openmp_mutex` mechanism.
+        - _openmp_mutex   # [s390x]
   - name: zfpy
     build:
       script: source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
