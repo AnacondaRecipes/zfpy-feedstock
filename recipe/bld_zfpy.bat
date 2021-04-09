@@ -18,7 +18,7 @@ cmake -G "Ninja"                               ^
   -DBUILD_ZFPY=ON                              ^
   -DBUILD_UTILITIES=ON                         ^
   -DBUILD_CFP=ON                               ^
-  -DZFP_WITH_OPENMP=OFF                        ^
+  -DZFP_WITH_OPENMP=ON                         ^
   -DCMAKE_BUILD_TYPE:STRING=Release            ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%"      ^
   -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^

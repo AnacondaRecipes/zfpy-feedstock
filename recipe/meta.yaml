@@ -24,7 +24,7 @@ source:
     # - 109-avoid-importing-cpython-array.patch
 
 build:
-  number: 5
+  number: 6
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
   run_exports:
