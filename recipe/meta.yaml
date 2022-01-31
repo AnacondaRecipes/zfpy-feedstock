@@ -43,6 +43,8 @@ requirements:
     # For defaults, this is included in libgcc-ng
     # - libgomp  # [linux]
     - llvm-openmp  # [osx]
+    - patch     # [not win]
+    - m2-patch  # [win]
 
 test:
   commands:
