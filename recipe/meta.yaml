@@ -1,72 +1,63 @@
-{% set version = "0.5.5" %}
+{% set version = "1.0.0" %}
 
 # This package builds 2 outputs
 #    zfp     --- C headers
 #    zfpy    --- Python package
 #
-# The build procedure actually rebuilds zfp when zfpy is being built
-# during the install phase, conda will simply ignore all the files
-# that are being copied related to zfp since they already exist in the prefix
 
 package:
-  name: zfp
+  name: zfp-split
   version: {{ version }}
 
 source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
-  sha256: 6a7f4934489087d9c117a4af327fd6495ea757924f4df467b9c537abf8bd86c4
+  sha256: fe13b03141ee9b571692aed42ff76cf37c9dcda40f9a43a808870dca3558a57c
   patches:
     # https://github.com/scikit-build/scikit-build/issues/506
     - 100-update-cmake.patch
-    # https://github.com/LLNL/zfp/pull/109
-    # This patch just isn't working. we do it manually in the build script
-    # It is a pretty easy fix, so hopefully upstream will accept it soon
-    # - 109-avoid-importing-cpython-array.patch
 
 build:
-  number: 6
-  script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
-  script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
-  run_exports:
-    # No real information, for now, let keep the defaults
-    - {{ pin_subpackage('zfp') }}
-  rpaths:
-    - lib/  # [unix]
-
+  number: 0
 requirements:
   build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - cmake
-    - make     # [unix]
-    - ninja    # [win]
-    # For defaults, this is included in libgcc-ng
-    # - libgomp  # [linux]
-    - llvm-openmp  # [osx]
     - patch     # [not win]
     - m2-patch  # [win]
 
-test:
-  commands:
-    - test -f $PREFIX/include/zfp.h                # [unix]
-    - test -f ${PREFIX}/lib/cmake/zfp/zfp-config.cmake  # [unix]
-    - if not exist %LIBRARY_INC%\zfp.h exit 1      # [win]
-    - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
-    - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
-    - if not exist %LIBRARY_BIN%\zfp.dll exit 1    # [win]
-    - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
-    - if not exist %LIBRARY_PREFIX%\lib\cmake\zfp\zfp-config.cmake exit 1  # [win]
-    # Command always returns 1
-    - which zfp  # [unix]
-    - where zfp  # [win]
-
 outputs:
   - name: zfp
+    build:
+      script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
+      script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
+      run_exports:
+        # No real information, for now, let keep the defaults
+        - {{ pin_subpackage('zfp') }}
     requirements:
-      run:
-        # Using selector until packages for other platforms are (re)built using
-        # newer defaults toolchains that use the `_openmp_mutex` mechanism.
-        - _openmp_mutex   # [s390x]
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - cmake
+        - make     # [unix]
+        - ninja    # [win]
+        # For defaults, this is included in libgcc-ng
+        # - libgomp  # [linux]
+        - llvm-openmp  # [osx]
+    test:
+      commands:
+        - test -f $PREFIX/include/zfp.h                # [unix]
+        - test -f ${PREFIX}/lib/cmake/zfp/zfp-config.cmake  # [unix]
+        - if not exist %LIBRARY_INC%\zfp.h exit 1      # [win]
+        - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
+        - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
+        - if not exist %LIBRARY_BIN%\zfp.dll exit 1    # [win]
+        - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\zfp\zfp-config.cmake exit 1  # [win]
+        - test -f $PREFIX/bin/zfp                      # [unix]
+        - if not exist %LIBRARY_BIN%\zfp.exe exit 1    # [win]
+        - if not exist %LIBRARY_BIN%\zfpcmd.exe exit 1 # [win]
+        # Command always returns 1
+        - which zfp  # [unix]
+        - where zfpcmd  # [win]
+        - where zfp  # [win]
   - name: zfpy
     build:
       script: source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
@@ -86,14 +77,17 @@ outputs:
       run:
         - python
         - {{ pin_compatible('numpy') }}
-        # I don't think run exports work with pin exact subpackage
         - {{ pin_subpackage('zfp', exact=True) }}
     test:
       imports:
         - zfpy
+      requires:
+        - pip
+      commands:
+        - pip check
 
 about:
-  home: https://computation.llnl.gov/projects/floating-point-compression
+  home: https://computing.llnl.gov/projects/zfp
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
@@ -105,7 +99,7 @@ about:
     e.g., for applications that read and write large data sets to and
     from disk. zfp is primarily written in C and C++ but also includes
     Python and Fortran bindings.
-  doc_url: http://zfp.readthedocs.io/en/release0.5.5/
+  doc_url: https://zfp.readthedocs.io/
   dev_url: https://github.com/LLNL/zfp
 
 extra:
