@@ -41,6 +41,8 @@ outputs:
         # For defaults, this is included in libgcc-ng
         # - libgomp  # [linux]
         - llvm-openmp  # [osx]
+      run:
+        - _openmp_mutex  # [linux]
     test:
       commands:
         - test -f $PREFIX/include/zfp.h                # [unix]
@@ -71,7 +73,7 @@ outputs:
         - ninja    # [win]
       host:
         - python
-        - numpy
+        - numpy {{ numpy }}
         - cython
         - {{ pin_subpackage('zfp', exact=True) }}
       run:
