@@ -12,16 +12,9 @@ package:
 source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
   sha256: fe13b03141ee9b571692aed42ff76cf37c9dcda40f9a43a808870dca3558a57c
-  patches:
-    # https://github.com/scikit-build/scikit-build/issues/506
-    - 100-update-cmake.patch
 
 build:
   number: 0
-requirements:
-  build:
-    - patch     # [not win]
-    - m2-patch  # [win]
 
 outputs:
   - name: zfp
