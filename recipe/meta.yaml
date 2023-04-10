@@ -67,7 +67,7 @@ outputs:
       host:
         - python
         - numpy {{ numpy }}
-        - cython
+        - cython 0.29.33
         - {{ pin_subpackage('zfp', exact=True) }}
       run:
         - python
