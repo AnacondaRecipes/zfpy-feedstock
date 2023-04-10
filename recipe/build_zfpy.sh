@@ -22,6 +22,9 @@ cmake                              \
   -DPython_FIND_VIRTUALENV=ONLY    \
   -DPython_FIND_IMPLEMENTATIONS="PyPy;CPython" \
   -DCMAKE_INSTALL_LIBDIR=lib       \
+  -DCMAKE_BUILD_TYPE=Release        \
+  -DPYTHON_INCLUDE_DIR=$(${PYTHON} -c 'import sysconfig; print(sysconfig.get_paths()["include"])') \
+  -DPYTHON_LIBRARY="${PREFIX}"/lib/libpython${PY_VER}.${SHLIB_EXT}  \
   ..
 
 make -j${CPU_COUNT}
