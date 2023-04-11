@@ -6,7 +6,7 @@ del /F/Q/S build
 mkdir build
 cd build
 
-set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
+set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,2%.lib
 
 :: hmaarrfk: 2020/06/20
 :: Basically, this build is going to reinstall the C libraries
