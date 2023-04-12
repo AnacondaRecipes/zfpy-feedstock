@@ -31,4 +31,7 @@ if errorlevel 1 exit 1
 
 cmake --build . --config Release
 
+COPY "%SRC_DIR%\build\bin\Release\*.pyd" "%PREFIX%\DLLs"
+COPY "%SRC_DIR%\build\lib\Release\*" "%LIBRARY_LIB%"
+COPY "%SRC_DIR%\build\bin\Release\*" "%LIBRARY_BIN%"
 if errorlevel 1 exit 1
