@@ -25,8 +25,6 @@ cmake -G "Visual Studio 16 2019"               ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%"    ^
   -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX%         ^
-  -DPython_ROOT_DIR=%PREFIX%                   ^
-  -DPython_FIND_VIRTUALENV=ONLY                ^
   ..
 
 if errorlevel 1 exit 1
