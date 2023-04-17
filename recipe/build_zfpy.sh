@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 set -ex
 
-# Patching is just not working with obscure line ending errors
-# sed in-place isn't portable. Just create a temporary file
-sed '/from cpython/d' python/zfpy.pyx > python/zfpy.pyx_fixed
-mv python/zfpy.pyx_fixed python/zfpy.pyx
-sed '/import array/d' python/zfpy.pyx > python/zfpy.pyx_fixed
-mv python/zfpy.pyx_fixed python/zfpy.pyx
-
 #  hmaarrfk: 2020/06/20
 #  Basically, this build is going to reinstall the C libraries
 #  we already compiled before
@@ -29,6 +22,9 @@ cmake                              \
   -DPython_FIND_VIRTUALENV=ONLY    \
   -DPython_FIND_IMPLEMENTATIONS="PyPy;CPython" \
   -DCMAKE_INSTALL_LIBDIR=lib       \
+  -DCMAKE_BUILD_TYPE=Release        \
+  -DPYTHON_INCLUDE_DIR=$(${PYTHON} -c 'import sysconfig; print(sysconfig.get_paths()["include"])') \
+  -DPYTHON_LIBRARY="${PREFIX}"/lib/libpython${PY_VER}.${SHLIB_EXT}  \
   ..
 
 make -j${CPU_COUNT}

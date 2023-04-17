@@ -20,8 +20,8 @@ if errorlevel 1 exit 1
 ninja install
 if errorlevel 1 exit 1
 
-REM command line utility not installed for some reason
-copy "bin\zfp.exe" "%LIBRARY_BIN%\."
+REM zfp command line was renamed from zfp to zfpcmd. Keeping for compatibility.
+copy "bin\zfpcmd.exe" "%LIBRARY_BIN%\zfp.exe"
 if errorlevel 1 exit 1
 
 :: Run tests

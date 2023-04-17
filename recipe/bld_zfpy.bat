@@ -6,7 +6,7 @@ del /F/Q/S build
 mkdir build
 cd build
 
-set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
+set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,2%.lib
 
 :: hmaarrfk: 2020/06/20
 :: Basically, this build is going to reinstall the C libraries
@@ -14,7 +14,7 @@ set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 :: but since the build is identical, conda will not find the newly compiled
 :: libraries, and just keep using the old ons
 :: Configure using the CMakeFiles
-cmake -G "Ninja"                               ^
+cmake -G "Visual Studio 16 2019"               ^
   -DBUILD_ZFPY=ON                              ^
   -DBUILD_UTILITIES=ON                         ^
   -DBUILD_CFP=ON                               ^
@@ -24,11 +24,14 @@ cmake -G "Ninja"                               ^
   -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%"    ^
-  -DPython_ROOT_DIR=%PREFIX%                   ^
-  -DPython_FIND_VIRTUALENV=ONLY                ^
+  -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX%         ^
   ..
 
 if errorlevel 1 exit 1
 
-ninja install
+cmake --build . --config Release
+
+COPY "%SRC_DIR%\build\bin\Release\*.pyd" "%PREFIX%\DLLs"
+COPY "%SRC_DIR%\build\lib\Release\*" "%LIBRARY_LIB%"
+COPY "%SRC_DIR%\build\bin\Release\*" "%LIBRARY_BIN%"
 if errorlevel 1 exit 1

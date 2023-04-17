@@ -10,15 +10,12 @@ cmake                              \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DCMAKE_PREFIX_PATH=${PREFIX}    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
+  -DCMAKE_INSTALL_BINDIR=bin       \
   ..
 
 make -j${CPU_COUNT}
 make test
 make install
-
-mkdir -p ${PREFIX}/bin
-# Binary not install correctly by cmake
-install bin/zfp ${PREFIX}/bin/.
 
 ./bin/testzfp
 
