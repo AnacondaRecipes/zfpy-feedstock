@@ -1,4 +1,5 @@
-{% set version = "1.0.0" %}
+{% set name = "zfp" %}
+{% set version = "1.0.1" %}
 
 # This package builds 2 outputs
 #    zfp     --- C headers
@@ -6,15 +7,17 @@
 #
 
 package:
-  name: zfp-split
+  name: {{ name }}-split
   version: {{ version }}
 
 source:
-  url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
-  sha256: fe13b03141ee9b571692aed42ff76cf37c9dcda40f9a43a808870dca3558a57c
+  url: https://github.com/LLNL/{{ name }}/archive/{{ version }}.tar.gz
+  sha256: 4984db6a55bc919831966dd17ba5e47ca7ac58668f4fd278ebd98cd2200da66f
+  patches:
+    - patches/fix_find_python_stuff.patch
 
 build:
-  number: 1
+  number: 0
 
 outputs:
   - name: zfp
@@ -26,6 +29,7 @@ outputs:
         - {{ pin_subpackage('zfp') }}
     requirements:
       build:
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - cmake
@@ -58,15 +62,16 @@ outputs:
       script: {{ RECIPE_DIR }}\bld_zfpy.bat       # [win]
     requirements:
       build:
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - cmake
         - make     # [unix]
-        - ninja    # [win]
+        - ninja-base    # [win]
       host:
         - python
         - numpy {{ numpy }}
-        - cython 0.29
+        - cython >=0.28
         - {{ pin_subpackage('zfp', exact=True) }}
       run:
         - python

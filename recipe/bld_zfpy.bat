@@ -14,7 +14,7 @@ set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,2%.lib
 :: but since the build is identical, conda will not find the newly compiled
 :: libraries, and just keep using the old ons
 :: Configure using the CMakeFiles
-cmake -G "Visual Studio 16 2019"               ^
+cmake -G "Ninja"                               ^
   -DBUILD_ZFPY=ON                              ^
   -DBUILD_UTILITIES=ON                         ^
   -DBUILD_CFP=ON                               ^
@@ -24,7 +24,8 @@ cmake -G "Visual Studio 16 2019"               ^
   -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%"    ^
-  -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX%         ^
+  -DPython_ROOT_DIR=%PREFIX%                   ^
+  -DPython_FIND_VIRTUALENV=ONLY                ^
   ..
 
 if errorlevel 1 exit 1
@@ -32,6 +33,8 @@ if errorlevel 1 exit 1
 cmake --build . --config Release
 
 COPY "%SRC_DIR%\build\bin\Release\*.pyd" "%PREFIX%\DLLs"
+if errorlevel 1 exit 1
 COPY "%SRC_DIR%\build\lib\Release\*" "%LIBRARY_LIB%"
+if errorlevel 1 exit 1
 COPY "%SRC_DIR%\build\bin\Release\*" "%LIBRARY_BIN%"
 if errorlevel 1 exit 1
