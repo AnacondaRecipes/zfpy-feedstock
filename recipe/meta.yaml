@@ -75,7 +75,7 @@ outputs:
         - {{ pin_subpackage('zfp', exact=True) }}
       run:
         - python
-        - {{ pin_compatible('numpy') }}
+        - numpy >=1.8.0
         - {{ pin_subpackage('zfp', exact=True) }}
     test:
       imports:
