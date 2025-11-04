@@ -8,12 +8,6 @@ cd build
 
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,2%.lib
 
-:: hmaarrfk: 2020/06/20
-:: Basically, this build is going to reinstall the C libraries
-:: we already compiled before
-:: but since the build is identical, conda will not find the newly compiled
-:: libraries, and just keep using the old ons
-:: Configure using the CMakeFiles
 cmake -G "Ninja"                               ^
   -DBUILD_ZFPY=ON                              ^
   -DBUILD_UTILITIES=ON                         ^
@@ -31,10 +25,12 @@ cmake -G "Ninja"                               ^
 if errorlevel 1 exit 1
 
 cmake --build . --config Release
+if errorlevel 1 exit 1
 
-COPY "%SRC_DIR%\build\bin\Release\*.pyd" "%PREFIX%\DLLs"
+:: Ninja outputs to bin/, lib/ directly (no Release/ subdirectory)
+COPY "%SRC_DIR%\build\bin\*.pyd" "%PREFIX%\DLLs"
 if errorlevel 1 exit 1
-COPY "%SRC_DIR%\build\lib\Release\*" "%LIBRARY_LIB%"
+COPY "%SRC_DIR%\build\lib\*" "%LIBRARY_LIB%"
 if errorlevel 1 exit 1
-COPY "%SRC_DIR%\build\bin\Release\*" "%LIBRARY_BIN%"
+COPY "%SRC_DIR%\build\bin\*" "%LIBRARY_BIN%"
 if errorlevel 1 exit 1
