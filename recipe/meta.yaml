@@ -17,7 +17,7 @@ source:
     - patches/fix_find_python_stuff.patch
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: zfp
@@ -36,9 +36,14 @@ outputs:
         - make     # [unix]
         # For defaults, this is included in libgcc-ng
         # - libgomp  # [linux]
+      host:
+        - libgomp      # [linux]
         - llvm-openmp  # [osx]
+        - vcomp14      # [win and x86_64]
       run:
-        - _openmp_mutex  # [linux]
+        - libgomp      # [linux]
+        - llvm-openmp  # [osx]
+        - vcomp14      # [win and x86_64]
     test:
       commands:
         - test -f $PREFIX/include/zfp.h                # [unix]
@@ -73,10 +78,16 @@ outputs:
         - numpy {{ numpy }}
         - cython >=0.28
         - {{ pin_subpackage('zfp', exact=True) }}
+        - libgomp      # [linux]
+        - llvm-openmp  # [osx]
+        - vcomp14      # [win and x86_64]
       run:
         - python
         - numpy >=1.8.0
         - {{ pin_subpackage('zfp', exact=True) }}
+        - libgomp      # [linux]
+        - llvm-openmp  # [osx]
+        - vcomp14      # [win and x86_64]
     test:
       imports:
         - zfpy
